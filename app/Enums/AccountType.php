@@ -8,7 +8,7 @@ enum AccountType: int
     case ContaPoupanca = 2;
     case ContaInvestimento = 3;
 
-    public function label(): string
+    public function labels(): string
     {
         return match ($this) {
             self::ContaCorrente => 'Conta Corrente',

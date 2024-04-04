@@ -8,9 +8,6 @@ enum TransactionType: int
     case EXPENSE = 2;
     case TRANSFER = 3;
 
-
-
-
     public function label(): string
     {
         return match ($this) {
