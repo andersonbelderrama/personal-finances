@@ -37,7 +37,23 @@ new class extends Component
             </div>
 
             <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <div x-data="{ darkMode: false }" x-init="
+            darkMode = JSON.parse(localStorage.getItem('darkMode'));
+
+            $watch('darkMode', value => {
+                localStorage.setItem('darkMode', value);
+                document.body.classList.toggle('dark', value);
+            })
+        " class="hidden sm:flex sm:items-center sm:ms-6">
+                <!-- Botão de alternância do modo escuro -->
+                <button @click="darkMode = !darkMode" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
+                    <svg x-show="!darkMode" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    <svg x-show="darkMode" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 21l-4-4m4 4l4-4m0 0L9 7l-4 4m4 4l4 4m-4-8v8m0-16V3" />
+                    </svg>
+                </button>
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
@@ -108,3 +124,5 @@ new class extends Component
         </div>
     </div>
 </nav>
+
+

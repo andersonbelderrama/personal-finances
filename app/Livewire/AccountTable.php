@@ -54,55 +54,65 @@ final class AccountTable extends PowerGridComponent
             ->add('branch')
             ->add('account_number')
             ->add('active')
-            ->add('type')
-            ->add('balance')
+            ->add('type_label', function (Account $account) {
+                return $account->type->labels();
+            })
+            ->add('balance_formatted', function (Account $account) {
+                return 'R$ ' . number_format($account->balance, 2, ',', '.');
+            })
             ->add('user_id')
-            ->add('created_at');
+            ->add('created_at_formatted', function (Account $account) {
+                return Carbon::parse($account->created_at)->format('d/m/Y H:i');
+            });
     }
 
     public function columns(): array
     {
         return [
-            Column::make('Id', 'id'),
-            Column::make('Name', 'name')
+            Column::make('#', 'id'),
+            Column::make('Banco', 'name')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Branch', 'branch')
+            Column::make('Agência', 'branch')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Account number', 'account_number')
+            Column::make('Conta', 'account_number')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Active', 'active')
+            Column::make('Ativo', 'active')
+                ->sortable()
+                ->toggleable()
+                ->searchable(),
+
+            Column::make('Tipo', 'type_label')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Type', 'type')
+            Column::make('Saldo', 'balance_formatted')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('Balance', 'balance')
+            //Column::make('User id', 'user_id'),
+
+            Column::make('Criado em', 'created_at_formatted')
                 ->sortable()
                 ->searchable(),
 
-            Column::make('User id', 'user_id'),
-            Column::make('Created at', 'created_at_formatted', 'created_at')
-                ->sortable(),
-
-            Column::make('Created at', 'created_at')
-                ->sortable()
-                ->searchable(),
-
-            Column::action('Action')
+            Column::action('Ações')
         ];
     }
 
     public function filters(): array
     {
         return [
+            Filter::inputText('name', 'Name')
+                ->operators(['contains', 'is', 'is_not']),
+
+
+
         ];
     }
 
@@ -134,4 +144,19 @@ final class AccountTable extends PowerGridComponent
         ];
     }
     */
+
+    public function onUpdatedEditable(string|int $id, string $field, string $value): void
+    {
+        Account::query()->find($id)->update([
+            $field => $value
+        ]);
+    }
+
+    public function onUpdatedToggleable(string $id, string $field, string $value): void
+    {
+        Account::query()->find($id)->update([
+            $field => $value
+        ]);
+    }
+
 }
