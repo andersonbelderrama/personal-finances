@@ -8,6 +8,10 @@ class Account extends Component
 {
     public function render()
     {
-        return view('livewire.account');
+        $accounts_sum = \App\Models\Account::where('user_id', auth()->user()->id)->selectRaw('type, sum(balance) as balance_sum')->groupBy('type')->get();
+
+        return view('livewire.account',[
+            'accounts_sum' => $accounts_sum
+        ]);
     }
 }
